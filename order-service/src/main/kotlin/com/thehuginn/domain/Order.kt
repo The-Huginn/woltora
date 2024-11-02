@@ -2,13 +2,14 @@ package com.thehuginn.domain
 
 import com.thehuginn.enums.OrderStatus
 import com.thehuginn.enums.OrderStatus.CREATED
-import com.thehuginn.utilities.DEFAULT_UUID
+import com.thehuginn.utils.DEFAULT_UUID
 import jakarta.persistence.CollectionTable
 import jakarta.persistence.Column
 import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType.STRING
 import jakarta.persistence.Enumerated
+import jakarta.persistence.ForeignKey
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.Table
@@ -16,6 +17,8 @@ import java.time.Instant
 import java.time.Instant.now
 import java.util.UUID
 import java.util.UUID.randomUUID
+import org.hibernate.annotations.Cascade
+import org.hibernate.annotations.CascadeType.ALL
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.type.SqlTypes.NAMED_ENUM
 
@@ -25,7 +28,7 @@ data class Order(
 
     @Enumerated(STRING)
     @JdbcTypeCode(NAMED_ENUM)
-    private val status: OrderStatus,
+    var status: OrderStatus,
 
     val userId: UUID,
 
@@ -36,9 +39,16 @@ data class Order(
 
     val creationTimestamp: Instant = now()
 
+    @Cascade(ALL)
     @ElementCollection
-    @CollectionTable(name = "order_items", joinColumns = [JoinColumn(name = "id")])
     @Column(name = "item")
+    @CollectionTable(
+        name = "order_items",
+        joinColumns = [JoinColumn(name = "id")],
+        foreignKey = ForeignKey(
+            name = "fk_orders_order_items",
+            foreignKeyDefinition = "foreign key (id) references orders (id) on delete cascade")
+    )
     val items: MutableList<UUID> = mutableListOf()
 
     constructor() : this(

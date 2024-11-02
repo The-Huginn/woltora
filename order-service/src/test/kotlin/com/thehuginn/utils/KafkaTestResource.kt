@@ -1,6 +1,6 @@
 package com.thehuginn.utils
 
-import com.thehuginn.messaging.MessageRepository
+import com.thehuginn.repository.MessageRepository
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager
 import io.smallrye.reactive.messaging.memory.InMemoryConnector
 

@@ -10,6 +10,7 @@ mp:
 
 quarkus:
   hibernate-orm:
+    implicit-naming-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     database:
       generation: drop-and-create
     log:

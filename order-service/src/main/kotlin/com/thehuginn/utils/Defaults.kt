@@ -1,4 +1,4 @@
-package com.thehuginn.utilities
+package com.thehuginn.utils
 
 import java.util.UUID
 
