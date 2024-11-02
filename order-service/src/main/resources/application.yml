@@ -1,0 +1,28 @@
+mp:
+  messaging:
+    incoming:
+      createOrder:
+        connector: smallrye-kafka
+        topic: createOrder
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+          deserializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+
+quarkus:
+  hibernate-orm:
+    database:
+      generation: drop-and-create
+    log:
+      sql: true
+
+"%dev":
+  quarkus:
+    http:
+      port: 8080
+
+"%test":
+  quarkus:
+    messaging:
+      kafka:
+        devservices:
+          enabled: false

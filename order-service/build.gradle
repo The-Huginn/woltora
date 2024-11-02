@@ -1,0 +1,24 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version "2.0.21"
+    id "org.jetbrains.kotlin.plugin.allopen" version "2.0.21"
+    id 'io.quarkus'
+}
+dependencies {
+    implementation 'io.quarkus:quarkus-jdbc-postgresql'
+    implementation 'io.quarkus:quarkus-spring-data-jpa'
+    implementation 'io.quarkus:quarkus-hibernate-orm'
+    implementation 'io.quarkus:quarkus-messaging-kafka'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+}
+repositories {
+    mavenCentral()
+}
+kotlin {
+    jvmToolchain(21)
+}
+
+quarkusDev {
+    doFirst {
+        System.setProperty("debug", "5005")
+    }
+}
