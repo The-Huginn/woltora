@@ -1,0 +1,9 @@
+name: Influx Db Dev Service
+#description: Do something useful.
+metadata:
+#  keywords:
+#    - influx-db-dev-service
+#  guide: ... # To create and publish this guide, see https://github.com/quarkiverse/quarkiverse/wiki#documenting-your-extension
+#  categories:
+#    - "miscellaneous"
+#  status: "preview"

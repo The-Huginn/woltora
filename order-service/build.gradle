@@ -17,7 +17,12 @@ kotlin {
     jvmToolchain(21)
 }
 
-quarkusDev {
+//quarkusDev {
+//    doFirst {
+//        System.setProperty("debug", "5005")
+//    }
+//}
+tasks.named('quarkusDev') {
     doFirst {
         System.setProperty("debug", "5005")
     }
