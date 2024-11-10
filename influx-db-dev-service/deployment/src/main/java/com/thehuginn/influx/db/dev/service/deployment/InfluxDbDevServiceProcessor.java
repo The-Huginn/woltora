@@ -15,6 +15,7 @@ public class InfluxDbDevServiceProcessor {
     private static final String FEATURE = "influx-db-dev-service";
     private static final int SERVICE_PORT = 8086;
     private static final String QUARKUS = "quarkus";
+    private static final String QUARKUS_PASSWORD = "quarkus123";
 
     @BuildStep
     FeatureBuildItem feature() {
@@ -23,15 +24,15 @@ public class InfluxDbDevServiceProcessor {
 
     @BuildStep(onlyIfNot = IsNormal.class, onlyIf = GlobalDevServicesConfig.Enabled.class)
     public DevServicesResultBuildItem createContainer() {
-        DockerImageName dockerImageName = DockerImageName.parse("influxdb:1.11.7");
+        DockerImageName dockerImageName = DockerImageName.parse("influxdb:2.7.10");
         GenericContainer container = new GenericContainer<>(dockerImageName)
-                .withEnv("DOCKER_INFLUXDB_INIT_MODE", "upgrade")
+                .withEnv("DOCKER_INFLUXDB_INIT_MODE", "setup")
                 .withEnv("DOCKER_INFLUXDB_INIT_USERNAME", QUARKUS)
-                .withEnv("DOCKER_INFLUXDB_INIT_PASSWORD", QUARKUS)
+                .withEnv("DOCKER_INFLUXDB_INIT_PASSWORD", QUARKUS_PASSWORD)
                 .withEnv("DOCKER_INFLUXDB_INIT_ORG", QUARKUS)
                 .withEnv("DOCKER_INFLUXDB_INIT_BUCKET", QUARKUS)
                 .withExposedPorts(SERVICE_PORT)
-                .waitingFor(Wait.forLogMessage(".*" + "Listening on HTTP" + ".*", 1))
+                .waitingFor(Wait.forLogMessage(".*" + "Starting query controller" + ".*", 1))
                 .withReuse(true);
 
         container.start();
@@ -40,7 +41,7 @@ public class InfluxDbDevServiceProcessor {
         Map<String, String> configOverrides = Map.of(
                 "influxdb.connectionUrl", newUrl,
                 "influxdb.username", QUARKUS,
-                "influxdb.password", QUARKUS,
+                "influxdb.password", QUARKUS_PASSWORD,
                 "influxdb.orgId", QUARKUS,
                 "influxdb.data.bucketName", QUARKUS
         );
