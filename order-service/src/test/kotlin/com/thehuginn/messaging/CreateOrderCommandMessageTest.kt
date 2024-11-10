@@ -1,6 +1,5 @@
 package com.thehuginn.messaging
 
-import com.thehuginn.MessagingTest
 import com.thehuginn.enums.OrderStatus.CREATED
 import com.thehuginn.messaging.dto.CreateOrderCommandMessage
 import com.thehuginn.repository.MessageRepository.Message.CREATE_ORDER
@@ -12,27 +11,33 @@ import jakarta.inject.Inject
 import java.lang.Thread.sleep
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
+import org.eclipse.microprofile.reactive.messaging.Channel
+import org.eclipse.microprofile.reactive.messaging.Emitter
 import org.junit.jupiter.api.Test
 
 @QuarkusTest
-class CreateOrderCommandMessageTest : MessagingTest() {
+class CreateOrderCommandMessageTest {
 
     @Inject
     @field:Default
     lateinit var orderRepository: OrderRepository
 
+    @Inject
+    @Channel(CREATE_ORDER)
+    lateinit var emitter: Emitter<CreateOrderCommandMessage>
+
     @Test
     @TestTransaction
     fun `should create simple order when message received`() {
-        connector.source<CreateOrderCommandMessage>(CREATE_ORDER).send(
+        emitter.send(
             CreateOrderCommandMessage(
                 items = listOf(UUID.fromString("63e01f7a-aded-4353-acce-095cd8ed8f18")),
                 userId = UUID.fromString("0111b250-1c15-44ae-8149-6eef0867ed84"),
                 restaurantId = UUID.fromString("69b2a618-84d7-45e9-b082-96db140f9973")
             )
-        ).complete()
+        )
 
-        sleep(100)
+        sleep(1000)
 
         assertThat(orderRepository.listAll()).satisfiesExactlyInAnyOrder(
             {

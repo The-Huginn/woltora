@@ -1,6 +1,5 @@
 package com.thehuginn.messaging
 
-import com.thehuginn.MessagingTest
 import com.thehuginn.enums.OrderStatus.IN_DELIVERY
 import com.thehuginn.messaging.dto.AssignDeliveryCommandMessage
 import com.thehuginn.repository.MessageRepository.Message.ASSIGN_DELIVERY
@@ -13,24 +12,30 @@ import jakarta.inject.Inject
 import java.lang.Thread.sleep
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
+import org.eclipse.microprofile.reactive.messaging.Channel
+import org.eclipse.microprofile.reactive.messaging.Emitter
 import org.junit.jupiter.api.Test
 
 @QuarkusTest
 @QuarkusTestWithSql
-class AssignDeliveryCommandMessageTest : MessagingTest() {
+class AssignDeliveryCommandMessageTest {
 
     @Inject
     @field:Default
     lateinit var orderRepository: OrderRepository
 
+    @Inject
+    @Channel(ASSIGN_DELIVERY)
+    lateinit var emitter: Emitter<AssignDeliveryCommandMessage>
+
     @Test
     @Sql(["sql/simple-order.sql"])
     fun `should assign delivery when message received`() {
-        connector.source<AssignDeliveryCommandMessage>(ASSIGN_DELIVERY).send(
+        emitter.send(
             AssignDeliveryCommandMessage(UUID.fromString("278ba540-d2e7-4f0c-862d-a6b6e5180338"))
-        ).complete()
+        )
 
-        sleep(100)
+        sleep(1000)
 
         assertThat(orderRepository.listAll()).satisfiesExactlyInAnyOrder({
             assertThat(it.id).isEqualTo(UUID.fromString("278ba540-d2e7-4f0c-862d-a6b6e5180338"))

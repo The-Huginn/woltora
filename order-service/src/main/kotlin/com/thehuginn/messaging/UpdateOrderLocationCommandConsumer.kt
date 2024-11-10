@@ -1,8 +1,6 @@
 package com.thehuginn.messaging
 
 import com.influxdb.client.InfluxDBClient
-import com.influxdb.client.WriteApiBlocking
-import com.influxdb.client.WriteOptions
 import com.influxdb.client.domain.WritePrecision.MS
 import com.thehuginn.domain.Order
 import com.thehuginn.exceptions.NotFoundException
@@ -19,7 +17,6 @@ import org.jboss.logmanager.Logger
 
 @ApplicationScoped
 class UpdateOrderLocationCommandConsumer(
-    val writeApiBlocking: WriteApiBlocking,
     val influxDBClient: InfluxDBClient,
     val orderRepository: OrderRepository
 ) {
@@ -28,9 +25,8 @@ class UpdateOrderLocationCommandConsumer(
 
     @Incoming(UPDATE_LOCATION)
     @Transactional
-    fun process(message: UpdateOrderLocationCommandMessage): Uni<Void> {
-        logger.info("Received message: $message")
-        return Uni.createFrom().item(message)
+    fun process(message: UpdateOrderLocationCommandMessage): Uni<Void> =
+        Uni.createFrom().item(message)
             .onItem().transformToUni { msg ->
                 logger.info("Processing message: $msg")
                 Uni.createFrom().item { orderRepository.findById(msg.orderId) }
@@ -44,16 +40,10 @@ class UpdateOrderLocationCommandConsumer(
                     }
             }
             .invoke { orderLocation ->
-                writeApiBlocking.writeMeasurement(MS, orderLocation)
-//            influxDBClient.makeWriteApi(
-//                WriteOptions.builder()
-//                    .batchSize(1)
-//                    .build()
-//            )
+                influxDBClient.makeWriteApi().use { it.writeMeasurement(MS, orderLocation) }
             }
             .onFailure().invoke { throwable ->
                 logger.info("Error during message processing $throwable")
             }
             .replaceWithVoid()
-    }
 }

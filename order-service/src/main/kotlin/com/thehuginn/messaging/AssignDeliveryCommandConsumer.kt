@@ -20,10 +20,11 @@ class AssignDeliveryCommandConsumer(
     @Incoming(ASSIGN_DELIVERY)
     fun process(message: AssignDeliveryCommandMessage): Uni<Void> =
         Uni.createFrom().item(message)
-        .map {
-            orderRepository.findById(it.orderId) ?: throw NotFoundException(Order::class.java, it.orderId)
-        }
-        .invoke { it -> it.status = IN_DELIVERY }
-        .invoke { it -> orderRepository.persistAndFlush(it) }
-        .replaceWithVoid()
+            .onItem().transformToUni { msg ->
+                Uni.createFrom().item { orderRepository.findById(msg.orderId) }
+                    .onItem().ifNull().failWith(NotFoundException(Order::class.java, msg.orderId))
+            }
+            .invoke { it -> it.status = IN_DELIVERY }
+            .invoke { it -> orderRepository.persistAndFlush(it) }
+            .replaceWithVoid()
 }
