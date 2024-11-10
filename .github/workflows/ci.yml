@@ -30,6 +30,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Prepare extension for influxDB
+        run: mvn clean install
+        working-directory: influx-db-dev-service
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
