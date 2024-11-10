@@ -1,3 +1,8 @@
 package com.thehuginn.messaging.dto
 
-data class UpdateOrderLocationCommandMessage()
+import java.util.UUID
+
+data class UpdateOrderLocationCommandMessage(
+    val orderId: UUID,
+    val location: String
+)
