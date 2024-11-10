@@ -15,6 +15,6 @@ class KafkaTestResource(
     }
 
     override fun stop() {
-        InMemoryConnector.clear();
+        InMemoryConnector.clear()
     }
 }

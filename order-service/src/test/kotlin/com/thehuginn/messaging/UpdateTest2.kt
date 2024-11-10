@@ -1,7 +1,6 @@
 package com.thehuginn.messaging
 
 import com.influxdb.client.InfluxDBClient
-import com.influxdb.client.WriteApiBlocking
 import com.thehuginn.MessagingTest
 import com.thehuginn.messaging.dto.UpdateOrderLocationCommandMessage
 import com.thehuginn.repository.MessageRepository.Message.UPDATE_LOCATION
@@ -17,7 +16,7 @@ import org.junit.jupiter.api.Test
 
 @QuarkusTest
 @QuarkusTestWithSql
-class UpdateOrderLocationCommandMessageTest : MessagingTest() {
+class UpdateTest2 : MessagingTest() {
 
     @Inject
     @field:Default
@@ -33,17 +32,18 @@ class UpdateOrderLocationCommandMessageTest : MessagingTest() {
 //        connector.source<UpdateOrderLocationCommandMessage>(UPDATE_LOCATION).send(
 //            UpdateOrderLocationCommandMessage(
 //                orderId = UUID.fromString("278ba540-d2e7-4f0c-862d-a6b6e5180338"),
-//                location = "Random XYZ"
+//                location = "Test Location"
 //            )
 //        )
 //            .runOnVertxContext(true)
 //            .complete()
 //
 //        sleep(1000)
+
         updateOrderLocationCommandConsumer.process(
             UpdateOrderLocationCommandMessage(
                 orderId = UUID.fromString("278ba540-d2e7-4f0c-862d-a6b6e5180338"),
-                location = "Random XYZ"
+                location = "Test Location"
             )
         )
             .await().indefinitely()
@@ -51,7 +51,7 @@ class UpdateOrderLocationCommandMessageTest : MessagingTest() {
         assertThat(influxDbClient.queryApi.query("from(bucket:\"quarkus\") |> range(start: -10m)")).anySatisfy {
             assertThat(it.records).anySatisfy { record ->
                 assertThat(record.value).isEqualTo(
-                    "Random XYZ"
+                    "Test Location"
                 )
             }
         }
