@@ -1,7 +1,13 @@
 package com.thehuginn.influx.db.dev.service.deployment;
 
+import com.thehuginn.influx.db.dev.service.runtime.InfluxDbDevServiceConfig;
+import com.thehuginn.influx.db.dev.service.runtime.InfluxDbProducer;
+import com.thehuginn.influx.db.dev.service.runtime.InfluxDbRecorder;
+import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.deployment.IsNormal;
+import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
+import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.DevServicesResultBuildItem;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.dev.devservices.GlobalDevServicesConfig;
@@ -9,6 +15,9 @@ import java.util.Map;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.DockerImageName;
+
+import static io.quarkus.arc.deployment.AdditionalBeanBuildItem.unremovableOf;
+import static io.quarkus.deployment.annotations.ExecutionTime.RUNTIME_INIT;
 
 public class InfluxDbDevServiceProcessor {
 
@@ -39,16 +48,31 @@ public class InfluxDbDevServiceProcessor {
 
         String newUrl = "http://" + container.getHost() + ":" + container.getMappedPort(SERVICE_PORT);
         Map<String, String> configOverrides = Map.of(
-                "influxdb.connectionUrl", newUrl,
-                "influxdb.username", QUARKUS,
-                "influxdb.password", QUARKUS_PASSWORD,
-                "influxdb.orgId", QUARKUS,
-                "influxdb.data.bucketName", QUARKUS
+                "quarkus.influxdb.connection-url", newUrl,
+                "quarkus.influxdb.username", QUARKUS,
+                "quarkus.influxdb.password", QUARKUS_PASSWORD,
+                "quarkus.influxdb.org-id", QUARKUS,
+                "quarkus.influxdb.data-bucket-name", QUARKUS
         );
 
         return new DevServicesResultBuildItem.RunningDevService(FEATURE, container.getContainerId(),
                 container::close, configOverrides)
                 .toBuildItem();
+    }
+
+    @BuildStep
+    @Record(RUNTIME_INIT)
+    void configureRuntime(
+            InfluxDbRecorder recorder,
+            InfluxDbDevServiceConfig config
+    ) {
+        recorder.setConfig(config);
+    }
+
+    @BuildStep
+    void registerBeans(BuildProducer<AdditionalBeanBuildItem> additionalBeanProducer) {
+        additionalBeanProducer.produce(unremovableOf(InfluxDbDevServiceConfig.class));
+        additionalBeanProducer.produce(unremovableOf(InfluxDbProducer.class));
     }
 
 }
