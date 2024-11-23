@@ -24,6 +24,7 @@ class AssignDeliveryCommandConsumer(
                 Uni.createFrom().item { orderRepository.findById(msg.orderId) }
                     .onItem().ifNull().failWith(NotFoundException(Order::class.java, msg.orderId))
             }
+            .map { it!! }
             .invoke { it -> it.status = IN_DELIVERY }
             .invoke { it -> orderRepository.persistAndFlush(it) }
             .replaceWithVoid()

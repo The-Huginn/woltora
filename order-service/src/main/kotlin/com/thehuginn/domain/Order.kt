@@ -64,4 +64,8 @@ data class Order(
         other as Order
         return id == other.id
     }
+
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
 }
