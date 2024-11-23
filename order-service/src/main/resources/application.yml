@@ -1,11 +1,15 @@
 quarkus:
   hibernate-orm:
-    implicit-naming-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    physical-naming-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     database:
       generation: drop-and-create
     log:
       sql: true
 
+  mongodb:
+    database: food
+    uuid-representation: standard
+    
 "%dev":
   quarkus:
     http:

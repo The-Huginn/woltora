@@ -4,10 +4,15 @@ plugins {
     id 'io.quarkus'
 }
 dependencies {
+    implementation 'io.quarkus:quarkus-mongodb-panache'
     implementation 'io.quarkus:quarkus-hibernate-orm-panache'
     implementation 'io.quarkus:quarkus-jdbc-postgresql'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testImplementation("com.thehuginn:quarkus-sql-testing:1.0.0-SNAPSHOT")
+}
+
+allOpen {
+    annotation("io.quarkus.mongodb.panache.common.MongoEntity")
 }
 
 kotlin {

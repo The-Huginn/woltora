@@ -22,6 +22,7 @@ subprojects {
         implementation 'io.quarkus:quarkus-rest-jackson'
         implementation 'io.quarkus:quarkus-messaging-kafka'
         implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        implementation 'io.quarkus:quarkus-config-yaml'
 
         testImplementation 'io.quarkus:quarkus-junit5'
         testImplementation 'io.rest-assured:rest-assured'
@@ -37,6 +38,7 @@ subprojects {
     test {
         systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
     }
+
     allOpen {
         annotation("jakarta.ws.rs.Path")
         annotation("jakarta.enterprise.context.ApplicationScoped")
