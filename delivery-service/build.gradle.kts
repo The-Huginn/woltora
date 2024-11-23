@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-
+    implementation("com.thehuginn:influx-db-dev-service:1.0.0-SNAPSHOT")
 }
 
 kotlin {

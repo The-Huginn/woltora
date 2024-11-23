@@ -6,11 +6,10 @@ plugins {
 dependencies {
     implementation 'io.quarkus:quarkus-hibernate-orm-panache'
     implementation 'io.quarkus:quarkus-jdbc-postgresql'
-    implementation 'com.thehuginn:influx-db-dev-service:1.0.0-SNAPSHOT'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    testImplementation("com.thehuginn:quarkus-sql-testing:1.0.0-SNAPSHOT")
 }
-repositories {
-    mavenCentral()
-}
+
 kotlin {
     jvmToolchain(21)
 }
@@ -20,8 +19,8 @@ kotlin {
 //        System.setProperty("debug", "5005")
 //    }
 //}
-tasks.named('quarkusDev') {
-    doFirst {
-        System.setProperty("debug", "5005")
-    }
-}
+//tasks.named('quarkusDev') {
+//    doFirst {
+//        System.setProperty("debug", "5005")
+//    }
+//}

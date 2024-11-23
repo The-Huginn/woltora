@@ -4,8 +4,8 @@ import com.thehuginn.enums.OrderStatus.IN_DELIVERY
 import com.thehuginn.messaging.dto.AssignDeliveryCommandMessage
 import com.thehuginn.repository.MessageRepository.Message.ASSIGN_DELIVERY
 import com.thehuginn.repository.OrderRepository
-import com.thehuginn.utils.QuarkusTestWithSql
-import com.thehuginn.utils.Sql
+import com.thehuginn.sql.QuarkusTestWithSql
+import com.thehuginn.sql.Sql
 import io.quarkus.test.junit.QuarkusTest
 import jakarta.enterprise.inject.Default
 import jakarta.inject.Inject

@@ -16,3 +16,4 @@ plugins {
 rootProject.name = 'woltora'
 include 'order-service'
 include 'person-service'
+include 'delivery-service'
