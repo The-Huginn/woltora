@@ -40,7 +40,7 @@ class UpdateOrderLocationCommandConsumer(
                     }
             }
             .invoke { orderLocation ->
-                influxDBClient.makeWriteApi().use { it.writeMeasurement(MS, orderLocation) }
+                influxDBClient.writeApiBlocking.writeMeasurement(MS, orderLocation)
             }
             .onFailure().invoke { throwable ->
                 logger.info("Error during message processing $throwable")

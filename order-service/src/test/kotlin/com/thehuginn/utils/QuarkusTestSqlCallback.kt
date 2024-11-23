@@ -19,7 +19,7 @@ class QuarkusTestSqlCallback: QuarkusTestBeforeEachCallback, QuarkusTestAfterEac
 
     override fun afterEach(context: QuarkusTestMethodContext?) {
         executeScripts(arrayOf("sql/clean.sql"))
-        deleteInfluxDb()
+//        deleteInfluxDb()
     }
 
     private fun getSqlAnnotation(testInstance: Any, context: QuarkusTestMethodContext): Sql? {
