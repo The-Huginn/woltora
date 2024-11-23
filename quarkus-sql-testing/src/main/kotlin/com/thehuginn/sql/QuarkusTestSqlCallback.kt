@@ -5,18 +5,24 @@ import io.quarkus.test.junit.callback.QuarkusTestAfterEachCallback
 import io.quarkus.test.junit.callback.QuarkusTestBeforeEachCallback
 import io.quarkus.test.junit.callback.QuarkusTestMethodContext
 import java.io.FileNotFoundException
-import java.lang.Thread
 import java.nio.file.Path
 import javax.sql.DataSource
 import kotlin.io.path.readText
 
-class QuarkusTestSqlCallback: QuarkusTestBeforeEachCallback, QuarkusTestAfterEachCallback {
+class QuarkusTestSqlCallback : QuarkusTestBeforeEachCallback, QuarkusTestAfterEachCallback {
     override fun beforeEach(context: QuarkusTestMethodContext?) {
         val testInstance = context?.testInstance ?: return
-        getSqlAnnotation(testInstance, context)?.let { executeScripts(it.scripts) }
+        getSqlAnnotation(testInstance, context)?.let {
+            // FIXME make this extension and in static context check for at least some QuarkusTestWithSql
+            testInstance.javaClass.getAnnotation(QuarkusTestWithSql::class.java)
+                ?: throw IllegalStateException("Missing ${QuarkusTestWithSql::class.simpleName} annotation")
+            executeScripts(it.scripts)
+        }
     }
 
     override fun afterEach(context: QuarkusTestMethodContext?) {
+        val testInstance = context?.testInstance ?: return
+        testInstance.javaClass.getAnnotation(QuarkusTestWithSql::class.java) ?: return
         executeScripts(arrayOf("sql/clean.sql"))
     }
 
@@ -32,8 +38,9 @@ class QuarkusTestSqlCallback: QuarkusTestBeforeEachCallback, QuarkusTestAfterEac
             val statement = connection.createStatement()
             for (script in scripts) {
                 val path: Path = Path.of(
-                Thread.currentThread().contextClassLoader.getResource(script)?.toURI()
-                    ?: throw FileNotFoundException("SQL script not found in resources: $script"))
+                    Thread.currentThread().contextClassLoader.getResource(script)?.toURI()
+                        ?: throw FileNotFoundException("SQL script not found in resources: $script")
+                )
                 val sql = path.readText()
                 statement.execute(sql)
             }

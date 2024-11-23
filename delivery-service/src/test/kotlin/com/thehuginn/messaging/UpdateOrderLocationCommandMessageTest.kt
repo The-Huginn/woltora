@@ -3,7 +3,6 @@ package com.thehuginn.messaging
 import com.influxdb.client.QueryApi
 import com.thehuginn.messaging.dto.UpdateOrderLocationCommandMessage
 import com.thehuginn.repository.MessageRepository.Message.UPDATE_LOCATION
-import com.thehuginn.sql.QuarkusTestWithSql
 import com.thehuginn.sql.Sql
 import io.quarkus.test.junit.QuarkusTest
 import jakarta.enterprise.inject.Default
@@ -17,7 +16,6 @@ import org.eclipse.microprofile.reactive.messaging.Emitter
 import org.junit.jupiter.api.Test
 
 @QuarkusTest
-@QuarkusTestWithSql
 class UpdateOrderLocationCommandMessageTest {
 
     @Inject
@@ -29,7 +27,6 @@ class UpdateOrderLocationCommandMessageTest {
     lateinit var emitter: Emitter<UpdateOrderLocationCommandMessage>
 
     @Test
-    @Sql(["sql/simple-order.sql"])
     fun `should update order location when message received`() {
         val instant = now()
         emitter.send(
@@ -51,7 +48,6 @@ class UpdateOrderLocationCommandMessageTest {
     }
 
     @Test
-    @Sql(["sql/simple-order.sql"])
     fun `should update order location when message received 2`() {
         emitter.send(
             UpdateOrderLocationCommandMessage(

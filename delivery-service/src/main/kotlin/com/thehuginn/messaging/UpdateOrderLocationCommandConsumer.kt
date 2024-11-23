@@ -2,12 +2,9 @@ package com.thehuginn.messaging
 
 import com.influxdb.client.InfluxDBClient
 import com.influxdb.client.domain.WritePrecision.MS
-import com.thehuginn.domain.Order
-import com.thehuginn.exceptions.NotFoundException
 import com.thehuginn.measurement.OrderLocation
 import com.thehuginn.messaging.dto.UpdateOrderLocationCommandMessage
 import com.thehuginn.repository.MessageRepository.Message.UPDATE_LOCATION
-import com.thehuginn.repository.OrderRepository
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.transaction.Transactional
@@ -17,8 +14,7 @@ import org.jboss.logmanager.Logger
 
 @ApplicationScoped
 class UpdateOrderLocationCommandConsumer(
-    val influxDBClient: InfluxDBClient,
-    val orderRepository: OrderRepository
+    val influxDBClient: InfluxDBClient
 ) {
 
     private val logger = Logger.getLogger(UpdateOrderLocationCommandConsumer::class.java.toString())
@@ -27,17 +23,12 @@ class UpdateOrderLocationCommandConsumer(
     @Transactional
     fun process(message: UpdateOrderLocationCommandMessage): Uni<Void> =
         Uni.createFrom().item(message)
-            .onItem().transformToUni { msg ->
-                logger.info("Processing message: $msg")
-                Uni.createFrom().item { orderRepository.findById(msg.orderId) }
-                    .onItem().ifNull().failWith(NotFoundException(Order::class.java, msg.orderId))
-                    .map {
-                        OrderLocation(
-                            location = msg.location,
-                            orderId = msg.orderId,
-                            timestamp = now()
-                        )
-                    }
+            .map {
+                OrderLocation(
+                    location = it.location,
+                    orderId = it.orderId,
+                    timestamp = now()
+                )
             }
             .invoke { orderLocation ->
                 influxDBClient.writeApiBlocking.writeMeasurement(MS, orderLocation)
