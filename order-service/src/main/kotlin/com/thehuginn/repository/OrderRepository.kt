@@ -6,4 +6,8 @@ import jakarta.enterprise.context.ApplicationScoped
 import java.util.UUID
 
 @ApplicationScoped
-class OrderRepository : PanacheRepositoryBase<Order, UUID>
+class OrderRepository : PanacheRepositoryBase<Order, UUID> {
+
+    fun getById(id: UUID) = findById(id) ?: throw NoSuchElementException()
+
+}

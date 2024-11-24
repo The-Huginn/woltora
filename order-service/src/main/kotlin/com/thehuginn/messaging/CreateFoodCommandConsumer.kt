@@ -2,7 +2,7 @@ package com.thehuginn.messaging
 
 import com.thehuginn.domain.Food
 import com.thehuginn.domain.Restaurant
-import com.thehuginn.exceptions.NotFoundException
+import com.thehuginn.exception.NotFoundException
 import com.thehuginn.messaging.dto.CreateFoodCommandMessage
 import com.thehuginn.repository.FoodRepository
 import com.thehuginn.repository.MessageRepository.Message.CREATE_FOOD

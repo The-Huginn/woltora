@@ -10,6 +10,9 @@ quarkus:
     database: food
     uuid-representation: standard
 
+  http:
+    root-path: /api
+
 "%dev":
   quarkus:
     http:

@@ -1,4 +1,4 @@
-package com.thehuginn.exceptions
+package com.thehuginn.exception
 
 class NotFoundException(
     entity: Class<*>,
