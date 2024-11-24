@@ -7,4 +7,6 @@ interface OrderService {
 
     fun getOrder(id: UUID): OrderResult
 
+    fun getOrdersByUserId(userId: UUID): List<OrderResult>
+
 }

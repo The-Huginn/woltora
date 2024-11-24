@@ -5,6 +5,7 @@ import com.thehuginn.service.OrderService
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
 import java.util.UUID
+import org.jboss.resteasy.reactive.RestQuery
 
 @Path("/order")
 class OrderResource(
@@ -15,4 +16,8 @@ class OrderResource(
     @GET
     @Path("/{id}")
     fun getOrder(id: UUID) = orderResponseMapper.mapFrom(orderService.getOrder(id))
+
+    @GET
+    fun gerOrdersByUserId(@RestQuery userId: UUID) = orderService.getOrdersByUserId(userId)
+        .map { orderResponseMapper.mapFrom(it) }
 }
