@@ -1,4 +1,4 @@
-package com.thehuginn.messaging.dto
+package com.thehuginn.messaging.dto.command
 
 import java.math.BigDecimal
 import java.util.UUID

@@ -12,6 +12,7 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.ForeignKey
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.time.Instant
 import java.time.Instant.now
@@ -32,7 +33,8 @@ data class Order(
 
     val userId: UUID,
 
-    val restaurantId: UUID
+    @ManyToOne
+    var restaurant: Restaurant
 ) {
     @Id
     val id: UUID = randomUUID()
@@ -54,7 +56,7 @@ data class Order(
     constructor() : this(
         status = CREATED,
         userId = DEFAULT_UUID,
-        restaurantId = DEFAULT_UUID
+        restaurant = Restaurant()
     )
 
     override fun equals(other: Any?): Boolean {

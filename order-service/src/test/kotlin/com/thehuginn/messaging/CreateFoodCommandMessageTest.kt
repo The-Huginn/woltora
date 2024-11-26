@@ -1,6 +1,6 @@
 package com.thehuginn.messaging
 
-import com.thehuginn.messaging.dto.CreateFoodCommandMessage
+import com.thehuginn.messaging.dto.command.CreateFoodCommandMessage
 import com.thehuginn.repository.FoodRepository
 import com.thehuginn.repository.MessageRepository.Message.CREATE_FOOD
 import com.thehuginn.sql.QuarkusTestWithSql

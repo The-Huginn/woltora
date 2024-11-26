@@ -1,1 +1,1 @@
-echo '{"userId": "0111b250-1c15-44ae-8149-6eef0867ed84", "items": ["63e01f7a-aded-4353-acce-095cd8ed8f18"], "restaurantId": "69b2a618-84d7-45e9-b082-96db140f9973"}' | kcat -P -b localhost:9092 -t createOrder
+echo '{"userId": "0111b250-1c15-44ae-8149-6eef0867ed84", "items": ["63e01f7a-aded-4353-acce-095cd8ed8f18"], "restaurantId": "10a3edc2-0c83-45f3-9345-f27f828ed01a"}' | kcat -P -b localhost:9092 -t createOrder

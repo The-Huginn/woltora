@@ -15,6 +15,7 @@ dependencies {
 //    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     testImplementation("com.thehuginn:quarkus-sql-testing:1.0.0-SNAPSHOT")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 allOpen {
@@ -40,3 +41,6 @@ kotlin {
 //        System.setProperty("debug", "5005")
 //    }
 //}
+repositories {
+    mavenCentral()
+}

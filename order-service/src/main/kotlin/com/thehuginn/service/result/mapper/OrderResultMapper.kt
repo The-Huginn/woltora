@@ -7,6 +7,6 @@ import org.mapstruct.Mapper
 @Mapper
 interface OrderResultMapper {
 
-    fun mapFrom(entity: Order): OrderResult
+    fun mapFrom(order: Order): OrderResult
 
 }

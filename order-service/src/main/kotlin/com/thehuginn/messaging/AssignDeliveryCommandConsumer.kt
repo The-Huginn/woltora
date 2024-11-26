@@ -3,7 +3,7 @@ package com.thehuginn.messaging
 import com.thehuginn.domain.Order
 import com.thehuginn.enums.OrderStatus.IN_DELIVERY
 import com.thehuginn.exception.NotFoundException
-import com.thehuginn.messaging.dto.AssignDeliveryCommandMessage
+import com.thehuginn.messaging.dto.command.AssignDeliveryCommandMessage
 import com.thehuginn.repository.MessageRepository.Message.ASSIGN_DELIVERY
 import com.thehuginn.repository.OrderRepository
 import io.smallrye.mutiny.Uni

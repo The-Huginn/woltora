@@ -1,4 +1,4 @@
-package com.thehuginn.messaging.dto
+package com.thehuginn.messaging.dto.command
 
 import java.util.UUID
 

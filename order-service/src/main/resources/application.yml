@@ -13,7 +13,6 @@ quarkus:
   http:
     root-path: /api
 
-
 "%dev":
   quarkus:
     http:

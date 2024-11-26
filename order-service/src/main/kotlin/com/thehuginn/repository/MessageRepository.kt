@@ -6,6 +6,8 @@ class MessageRepository {
         const val CREATE_ORDER = "createOrder"
         const val ASSIGN_DELIVERY = "assignDelivery"
         const val CREATE_FOOD = "createFood"
+
+        const val ORDER_CREATED = "orderCreated"
     }
 
 }

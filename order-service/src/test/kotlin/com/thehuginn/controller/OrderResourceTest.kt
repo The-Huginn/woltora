@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test
 class OrderResourceTest {
 
     @Test
-    @Sql(["sql/simple-order.sql"])
+    @Sql(["sql/simple-restaurant.sql", "sql/simple-order.sql"])
     fun testGetOrderById() {
         val orderId = UUID.fromString("278ba540-d2e7-4f0c-862d-a6b6e5180338")
 
@@ -32,7 +32,7 @@ class OrderResourceTest {
         assertThat(response.id).isEqualTo(orderId)
         assertThat(response.items).containsExactlyInAnyOrder(UUID.fromString("f1e98890-74d1-4800-8347-7f2e68fc9bfc"))
         assertThat(response.userId).isEqualTo(UUID.fromString("5ff13a5c-ef93-4096-8507-21ab93d1f894"))
-        assertThat(response.restaurantId).isEqualTo(UUID.fromString("6085ce48-da17-42ab-bef7-ee34f60f0762"))
+        assertThat(response.restaurantId).isEqualTo(UUID.fromString("10a3edc2-0c83-45f3-9345-f27f828ed01a"))
         assertThat(response.status).isEqualTo(CREATED)
     }
 }
