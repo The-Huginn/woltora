@@ -1,0 +1,19 @@
+quarkus:
+  hibernate-orm:
+    physical-naming-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    database:
+      generation: drop-and-create
+    log:
+      sql: true
+
+  http:
+    root-path: /api
+
+"%dev":
+  quarkus:
+    http:
+      port: 8080
+
+    kafka:
+      devservices:
+        port: 9092
