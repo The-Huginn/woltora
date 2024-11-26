@@ -45,6 +45,7 @@ subprojects {
 
         testImplementation("io.quarkus:quarkus-junit5")
         testImplementation("io.rest-assured:rest-assured")
+        testImplementation("org.awaitility:awaitility")
         testImplementation("org.assertj:assertj-core:3.26.3")
         testImplementation("com.thehuginn:quarkus-sql-testing:1.0.0-SNAPSHOT")
     }
