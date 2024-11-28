@@ -8,9 +8,10 @@ plugins {
 
 dependencies {
     implementation("io.quarkus:quarkus-mongodb-panache-kotlin")
-    implementation("io.quarkus:quarkus-hibernate-orm-panache-kotlin")
-    implementation("io.quarkus:quarkus-jdbc-postgresql")
+    implementation("io.quarkus:quarkus-hibernate-reactive-panache-kotlin")
+    implementation("io.quarkus:quarkus-reactive-pg-client")
 
+    testImplementation("io.quarkus:quarkus-test-vertx")
     testImplementation("com.thehuginn:quarkus-sql-testing:1.0.0-SNAPSHOT")
 }
 

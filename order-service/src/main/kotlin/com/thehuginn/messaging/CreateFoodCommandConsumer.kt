@@ -7,9 +7,9 @@ import com.thehuginn.messaging.dto.command.CreateFoodCommandMessage
 import com.thehuginn.repository.FoodRepository
 import com.thehuginn.repository.MessageRepository.Message.CREATE_FOOD
 import com.thehuginn.repository.RestaurantRepository
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
-import jakarta.transaction.Transactional
 import org.eclipse.microprofile.reactive.messaging.Incoming
 import org.jboss.logmanager.Logger
 
@@ -22,7 +22,8 @@ class CreateFoodCommandConsumer(
     private val logger = Logger.getLogger(CreateFoodCommandConsumer::class.java.toString())
 
     @Incoming(CREATE_FOOD)
-    @Transactional
+    @WithTransaction
+    // FIXME move logic to service & remove @WithTransaction
     fun process(message: CreateFoodCommandMessage): Uni<Void> =
         Uni.createFrom().item(message)
             .onItem().transformToUni { msg ->

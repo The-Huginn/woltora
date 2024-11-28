@@ -9,14 +9,14 @@ import com.thehuginn.repository.OrderRepository
 import com.thehuginn.sql.QuarkusTestWithSql
 import com.thehuginn.sql.Sql
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.vertx.RunOnVertxContext
 import io.smallrye.mutiny.Multi
+import io.smallrye.mutiny.Uni
 import jakarta.enterprise.inject.Default
 import jakarta.inject.Inject
-import java.lang.Thread.sleep
+import java.time.Duration
 import java.util.UUID
-import java.util.concurrent.TimeUnit.SECONDS
 import org.assertj.core.api.Assertions.assertThat
-import org.awaitility.Awaitility.await
 import org.eclipse.microprofile.reactive.messaging.Channel
 import org.eclipse.microprofile.reactive.messaging.Emitter
 import org.junit.jupiter.api.Test
@@ -38,11 +38,13 @@ class CreateOrderCommandMessageTest {
 
     @Test
     @Sql(["sql/simple-restaurant.sql"])
+    @RunOnVertxContext
     fun `should create simple order when message received`() {
         val receivedMessages = mutableListOf<OrderCreatedEventMessage>()
         messages.subscribe().with { message ->
             receivedMessages.add(message)
         }
+
         emitter.send(
             CreateOrderCommandMessage(
                 items = listOf(UUID.fromString("63e01f7a-aded-4353-acce-095cd8ed8f18")),
@@ -51,29 +53,31 @@ class CreateOrderCommandMessageTest {
             )
         )
 
-        sleep(1000)
+        Uni.createFrom().voidItem().onItem().delayIt().by(Duration.ofSeconds(1)).subscribe().with {
+            assertThat(receivedMessages).satisfiesExactlyInAnyOrder({
+                assertThat(it.restaurant.id).isEqualTo(UUID.fromString("10a3edc2-0c83-45f3-9345-f27f828ed01a"))
+                assertThat(it.restaurant.latitude).isEqualByComparingTo("50.07")
+                assertThat(it.restaurant.longitude).isEqualByComparingTo("14.43")
+            })
 
-        await().atMost(5, SECONDS).until { receivedMessages.isNotEmpty() }
-
-        assertThat(receivedMessages).satisfiesExactlyInAnyOrder({
-            assertThat(it.restaurant.id).isEqualTo(UUID.fromString("10a3edc2-0c83-45f3-9345-f27f828ed01a"))
-            assertThat(it.restaurant.latitude).isEqualByComparingTo("50.07")
-            assertThat(it.restaurant.longitude).isEqualByComparingTo("14.43")
-        })
-
-        assertThat(orderRepository.listAll()).satisfiesExactlyInAnyOrder(
-            {
-                assertThat(it.id).isNotNull()
-                assertThat(it.items).satisfiesExactlyInAnyOrder({ item -> assertThat(item).isEqualTo(UUID.fromString("63e01f7a-aded-4353-acce-095cd8ed8f18")) })
-                assertThat(it.userId).isEqualTo(UUID.fromString("0111b250-1c15-44ae-8149-6eef0867ed84"))
-                assertThat(it.restaurant).satisfies({ restaurant ->
-                    assertThat(restaurant.id).isEqualTo(UUID.fromString("10a3edc2-0c83-45f3-9345-f27f828ed01a"))
-                    assertThat(restaurant.name).isEqualTo("Woltora's Franchise")
-                    assertThat(restaurant.latitude).isEqualByComparingTo("50.07")
-                    assertThat(restaurant.longitude).isEqualByComparingTo("14.43")
-                })
-                assertThat(it.status).isEqualTo(CREATED)
+            orderRepository.listAll().subscribe().with { orders ->
+                assertThat(orders).satisfiesExactlyInAnyOrder(
+                    {
+                        assertThat(it.id).isNotNull()
+                        assertThat(it.items).satisfiesExactlyInAnyOrder({ item ->
+                            assertThat(item).isEqualTo(UUID.fromString("63e01f7a-aded-4353-acce-095cd8ed8f18"))
+                        })
+                        assertThat(it.userId).isEqualTo(UUID.fromString("0111b250-1c15-44ae-8149-6eef0867ed84"))
+                        assertThat(it.restaurant).satisfies({ restaurant ->
+                            assertThat(restaurant.id).isEqualTo(UUID.fromString("10a3edc2-0c83-45f3-9345-f27f828ed01a"))
+                            assertThat(restaurant.name).isEqualTo("Woltora's Franchise")
+                            assertThat(restaurant.latitude).isEqualByComparingTo("50.07")
+                            assertThat(restaurant.longitude).isEqualByComparingTo("14.43")
+                        })
+                        assertThat(it.status).isEqualTo(CREATED)
+                    }
+                )
             }
-        )
+        }
     }
 }

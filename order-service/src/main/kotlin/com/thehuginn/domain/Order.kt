@@ -9,6 +9,7 @@ import jakarta.persistence.ElementCollection
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType.STRING
 import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType.EAGER
 import jakarta.persistence.ForeignKey
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
@@ -21,6 +22,8 @@ import java.util.UUID.randomUUID
 import org.hibernate.annotations.Cascade
 import org.hibernate.annotations.CascadeType.ALL
 import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction.CASCADE
 import org.hibernate.type.SqlTypes.NAMED_ENUM
 
 @Entity
@@ -33,6 +36,7 @@ data class Order(
 
     val userId: UUID,
 
+    @OnDelete(action = CASCADE)
     @ManyToOne
     var restaurant: Restaurant
 ) {
@@ -42,7 +46,7 @@ data class Order(
     val creationTimestamp: Instant = now()
 
     @Cascade(ALL)
-    @ElementCollection
+    @ElementCollection(fetch = EAGER)
     @Column(name = "item")
     @CollectionTable(
         name = "order_items",

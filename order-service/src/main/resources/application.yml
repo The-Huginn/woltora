@@ -13,6 +13,18 @@ quarkus:
   http:
     root-path: /api
 
+#mp:
+#  messaging:
+#    outgoing:
+#      orderCreated:
+#        merge: true
+#        value:
+#          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+#    incoming:
+#      createOrder:
+#        value:
+#          deserializer: com.thehuginn.messaging.dto.Deserializer
+
 "%dev":
   quarkus:
     http:
@@ -21,3 +33,8 @@ quarkus:
     kafka:
       devservices:
         port: 9092
+
+"%test":
+  quarkus:
+    hibernate-orm:
+      sql-load-script: no-file

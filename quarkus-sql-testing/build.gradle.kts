@@ -13,6 +13,7 @@ repositories {
 dependencies {
     implementation("io.quarkus:quarkus-arc:3.16.1")
     implementation("io.quarkus:quarkus-junit5:3.16.1")
+    implementation("io.quarkus:quarkus-reactive-pg-client:3.16.1")
 }
 
 publishing {

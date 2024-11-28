@@ -1,2 +1,2 @@
-delete from orders;
 delete from restaurant;
+delete from orders;

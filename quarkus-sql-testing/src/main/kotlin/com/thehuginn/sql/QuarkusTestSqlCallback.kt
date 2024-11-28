@@ -4,6 +4,7 @@ import io.quarkus.arc.Arc
 import io.quarkus.test.junit.callback.QuarkusTestAfterEachCallback
 import io.quarkus.test.junit.callback.QuarkusTestBeforeEachCallback
 import io.quarkus.test.junit.callback.QuarkusTestMethodContext
+import io.vertx.mutiny.pgclient.PgPool
 import java.io.FileNotFoundException
 import java.nio.file.Path
 import javax.sql.DataSource
@@ -33,17 +34,31 @@ class QuarkusTestSqlCallback : QuarkusTestBeforeEachCallback, QuarkusTestAfterEa
     }
 
     private fun executeScripts(scripts: Array<String>) {
+        val sqlStatement = scripts.map { script ->
+            val path: Path = Path.of(
+                Thread.currentThread().contextClassLoader.getResource(script)?.toURI()
+                    ?: throw FileNotFoundException("SQL script not found in resources: $script")
+            )
+            path.readText()
+        }.joinToString(separator = "\n")
+
+        val datasourceDetected = Arc.container().instance(DataSource::class.java).get() != null
+        if (datasourceDetected) {
+            executeWithDataSource(sqlStatement)
+        } else {
+            executeReactiveSqlClient(sqlStatement)
+        }
+    }
+
+    private fun executeReactiveSqlClient(sqlStatement: String) {
+        val sqlClient = Arc.container().instance(PgPool::class.java).get()
+        sqlClient.query(sqlStatement).execute().await().indefinitely()
+    }
+
+    private fun executeWithDataSource(sqlStatement: String) {
         val dataSource = Arc.container().instance(DataSource::class.java).get()
         dataSource.connection.use { connection ->
-            val statement = connection.createStatement()
-            for (script in scripts) {
-                val path: Path = Path.of(
-                    Thread.currentThread().contextClassLoader.getResource(script)?.toURI()
-                        ?: throw FileNotFoundException("SQL script not found in resources: $script")
-                )
-                val sql = path.readText()
-                statement.execute(sql)
-            }
+            connection.createStatement().executeQuery(sqlStatement)
         }
     }
 }

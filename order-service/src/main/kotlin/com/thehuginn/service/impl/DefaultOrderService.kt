@@ -1,17 +1,18 @@
 package com.thehuginn.service.impl
 
 import com.thehuginn.domain.Order
-import com.thehuginn.domain.Restaurant
 import com.thehuginn.enums.OrderStatus.CREATED
-import com.thehuginn.exception.NotFoundException
+import com.thehuginn.enums.OrderStatus.IN_DELIVERY
 import com.thehuginn.repository.OrderRepository
 import com.thehuginn.repository.RestaurantRepository
 import com.thehuginn.service.OrderService
+import com.thehuginn.service.command.AssignDeliveryCommand
 import com.thehuginn.service.command.OrderCommand
 import com.thehuginn.service.result.OrderResult
 import com.thehuginn.service.result.mapper.OrderResultMapper
+import io.quarkus.hibernate.reactive.panache.common.WithTransaction
+import io.smallrye.mutiny.Uni
 import jakarta.enterprise.context.ApplicationScoped
-import jakarta.transaction.Transactional
 import java.util.UUID
 
 @ApplicationScoped
@@ -21,25 +22,32 @@ class DefaultOrderService(
     private val orderResultMapper: OrderResultMapper
 ) : OrderService {
 
-    @Transactional
-    override fun getOrder(id: UUID) = orderResultMapper.mapFrom(
-        orderRepository.getById(id)
-    )
+    @WithTransaction
+    override fun getOrder(id: UUID) =
+        orderRepository.getById(id).map { orderResultMapper.mapFrom(it) }
 
-    @Transactional
-    override fun persist(command: OrderCommand): OrderResult {
-        val order = Order(
-            status = CREATED,
-            userId = command.userId,
-            restaurant = restaurantRepository.findById(command.restaurantId) ?: throw NotFoundException(Restaurant::class.java, command.restaurantId)
-        )
-        order.items.addAll(command.items)
-
-        orderRepository.persist(order)
-        return orderResultMapper.mapFrom(order)
+    @WithTransaction
+    override fun persist(command: OrderCommand): Uni<OrderResult> {
+        return restaurantRepository.findById(command.restaurantId)
+            .map {
+                Order(
+                    status = CREATED,
+                    userId = command.userId,
+                    restaurant = it
+                )
+            }
+            .invoke { it -> it.items.addAll(command.items) }
+            .call { it -> orderRepository.persist(it) }
+            .map { orderResultMapper.mapFrom(it) }
     }
 
-    @Transactional
+    @WithTransaction
     override fun getOrdersByUserId(userId: UUID) = orderRepository.list(Order::userId.name, userId)
-        .map { orderResultMapper.mapFrom(it) }
+        .map { it.map { order -> orderResultMapper.mapFrom(order) } }
+
+    @WithTransaction
+    override fun assignOrder(command: AssignDeliveryCommand) = orderRepository.getById(command.orderId)
+        .invoke { it -> it.status = IN_DELIVERY }
+        .call { it -> orderRepository.persist(it) }
+        .replaceWithVoid()
 }

@@ -3,7 +3,6 @@ package com.thehuginn.messaging
 import com.influxdb.client.QueryApi
 import com.thehuginn.messaging.dto.UpdateOrderLocationCommandMessage
 import com.thehuginn.repository.MessageRepository.Message.UPDATE_LOCATION
-import com.thehuginn.sql.Sql
 import io.quarkus.test.junit.QuarkusTest
 import jakarta.enterprise.inject.Default
 import jakarta.inject.Inject
