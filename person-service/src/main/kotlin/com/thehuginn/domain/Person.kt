@@ -6,7 +6,6 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Enumerated
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
-import jakarta.persistence.CascadeType
 import jakarta.persistence.CascadeType.ALL
 import jakarta.persistence.EnumType.STRING
 import java.util.UUID
@@ -19,7 +18,7 @@ data class Person(
 
     @Enumerated(STRING)
     @JdbcTypeCode(NAMED_ENUM)
-    val role: PersonType,
+    var type: PersonType,
 
     var firstName: String,
 

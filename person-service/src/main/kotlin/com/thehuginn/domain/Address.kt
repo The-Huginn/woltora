@@ -14,21 +14,21 @@ import java.util.UUID.randomUUID
 @Entity
 data class Address(
 
-    val country: String,
+    var country: String,
 
-    val city: String,
+    var city: String,
 
-    val street: String,
+    var street: String,
 
-    val number: String,
+    var number: String,
 
-    val postalCode: String,
+    var postalCode: String,
 
-    val description: String,
+    var description: String,
 
-    val latitude: BigDecimal,
+    var latitude: BigDecimal,
 
-    val longitude: BigDecimal
+    var longitude: BigDecimal
 ) {
     @Id
     val id: UUID = randomUUID()

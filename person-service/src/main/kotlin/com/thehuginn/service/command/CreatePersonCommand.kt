@@ -1,10 +1,8 @@
-package com.thehuginn.controller.dto.response
+package com.thehuginn.service.command
 
 import com.thehuginn.enums.PersonType
-import java.util.UUID
 
-data class PersonResponse (
-    val id: UUID,
+class CreatePersonCommand (
     val firstName: String,
     val lastName: String,
     val email: String,
