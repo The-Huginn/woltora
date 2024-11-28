@@ -1,0 +1,13 @@
+quarkus:
+  http:
+    root-path: /api
+    test-port: 8083
+
+"%dev":
+  quarkus:
+    http:
+      port: 8082
+
+    kafka:
+      devservices:
+        port: 9092
