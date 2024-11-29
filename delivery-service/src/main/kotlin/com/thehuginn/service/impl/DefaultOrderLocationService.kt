@@ -16,11 +16,14 @@ class DefaultOrderLocationService(
 
     companion object {
         const val INFLUX_QUERY =
-            "from(bucket:\"quarkus\") |> range(start: 0) |> filter(fn: (r) => r._measurement == \"order_location\")"
+            """from(bucket: "quarkus")
+            |> range(start: 0)
+            |> filter(fn: (r) => r._measurement == "order_location" and r.orderId == "%s")
+            |> last()"""
     }
 
     override fun getOrderLocation(orderId: UUID) =
-        queryApi.query(INFLUX_QUERY, OrderLocation::class.java)
+        queryApi.query(INFLUX_QUERY.format(orderId), OrderLocation::class.java)
             .asSequence()
             .find { it != null }
             ?.let { orderLocationResultMapper.mapFrom(it) }

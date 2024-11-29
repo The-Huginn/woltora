@@ -3,7 +3,6 @@ package com.thehuginn.messaging
 import com.influxdb.client.QueryApi
 import com.thehuginn.messaging.dto.UpdateOrderLocationCommandMessage
 import com.thehuginn.repository.MessageRepository.Message.UPDATE_LOCATION
-import com.thehuginn.service.impl.DefaultOrderLocationService.Companion.INFLUX_QUERY
 import io.quarkus.test.junit.QuarkusTest
 import jakarta.enterprise.inject.Default
 import jakarta.inject.Inject
@@ -38,7 +37,7 @@ class UpdateOrderLocationCommandMessageTest {
 
         sleep(1000)
 
-        assertThat(queryApi.query(INFLUX_QUERY)).anySatisfy {
+        assertThat(queryApi.query("from(bucket:\"quarkus\") |> range(start: 0) |> filter(fn: (r) => r._measurement == \"order_location\")")).anySatisfy {
             assertThat(it.records).anySatisfy { record ->
                 assertThat(record.time).isAfter(instant)
                 assertThat(record.values).containsEntry("orderId", "278ba540-d2e7-4f0c-862d-a6b6e5180338")
