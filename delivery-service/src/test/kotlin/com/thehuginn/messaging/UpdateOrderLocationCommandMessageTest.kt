@@ -7,6 +7,7 @@ import com.thehuginn.service.impl.DefaultOrderLocationService.Companion.INFLUX_Q
 import io.quarkus.test.junit.QuarkusTest
 import jakarta.enterprise.inject.Default
 import jakarta.inject.Inject
+import java.lang.Thread.sleep
 import java.time.Instant.now
 import java.util.UUID
 import org.assertj.core.api.Assertions.assertThat
@@ -34,6 +35,8 @@ class UpdateOrderLocationCommandMessageTest {
                 location = "Random XYZ"
             )
         )
+
+        sleep(1000)
 
         assertThat(queryApi.query(INFLUX_QUERY)).anySatisfy {
             assertThat(it.records).anySatisfy { record ->

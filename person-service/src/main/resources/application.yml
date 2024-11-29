@@ -18,3 +18,8 @@ quarkus:
     kafka:
       devservices:
         port: 9092
+
+"%test":
+  quarkus:
+    hibernate-orm:
+      sql-load-script: no-file

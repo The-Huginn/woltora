@@ -25,8 +25,12 @@ class UpdateLocationMockJob(
     fun updateOrdersLocation() {
         try {
             orderServiceMicroservice.getOrdersByUserId(userId)
-                .apply { logger.info("Updating location for orders for user $userId") }
-                .map { UpdateOrderLocationCommandMessage(it.userId, "Location: ${random()}") }
+                .apply {
+                    if (this.isNotEmpty()) {
+                        logger.info("Updating location for orders for user $userId")
+                    }
+                }
+                .map { UpdateOrderLocationCommandMessage(it.id, "Location: ${random()}") }
                 .forEach { emitter.send(it) }
         } catch (_: Exception) {
             logger.info("Waiting for the user $userId to create order")
