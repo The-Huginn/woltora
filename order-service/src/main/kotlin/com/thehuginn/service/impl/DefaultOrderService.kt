@@ -42,6 +42,10 @@ class DefaultOrderService(
     }
 
     @WithTransaction
+    override fun getAll() = orderRepository.listAll()
+        .map { it.map { order -> orderResultMapper.mapFrom(order) } }
+
+    @WithTransaction
     override fun getOrdersByUserId(userId: UUID) = orderRepository.list(Order::userId.name, userId)
         .map { it.map { order -> orderResultMapper.mapFrom(order) } }
 

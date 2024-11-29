@@ -2,6 +2,9 @@ quarkus:
   http:
     root-path: /api
     test-port: 8083
+  rest-client:
+    "com.thehuginn.integration.OrderServiceMicroservice":
+      url: http://localhost:8080
 
 "%dev":
   quarkus:

@@ -23,6 +23,7 @@ class UpdateOrderLocationCommandConsumer(
     @Transactional
     fun process(message: UpdateOrderLocationCommandMessage): Uni<Void> =
         Uni.createFrom().item(message)
+            .invoke { msg -> logger.info("Updating location for order ${msg.orderId} to location ${msg.location}") }
             .map {
                 OrderLocation(
                     location = it.location,

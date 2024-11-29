@@ -1,9 +1,7 @@
 package com.thehuginn.controller
 
 import com.thehuginn.controller.dto.response.mapper.OrderResponseMapper
-import com.thehuginn.repository.OrderRepository
 import com.thehuginn.service.OrderService
-import io.quarkus.hibernate.reactive.panache.common.WithTransaction
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
@@ -14,8 +12,7 @@ import org.jboss.resteasy.reactive.RestQuery
 @ApplicationScoped
 class OrderResource(
     private val orderService: OrderService,
-    private val orderResponseMapper: OrderResponseMapper,
-    private val orderRepository: OrderRepository
+    private val orderResponseMapper: OrderResponseMapper
 ) {
 
     @GET
@@ -29,6 +26,5 @@ class OrderResource(
 
     @GET
     @Path("/all")
-    @WithTransaction
-    fun getAllOrders() = orderRepository.listAll()
+    fun getAllOrders() = orderService.getAll()
 }

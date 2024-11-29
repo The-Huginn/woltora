@@ -11,6 +11,9 @@ repositories {
 
 dependencies {
     implementation("com.thehuginn:influx-db-dev-service:1.0.0-SNAPSHOT")
+    implementation("io.quarkus:quarkus-scheduler")
+    implementation("io.quarkus:quarkus-rest-client")
+    implementation("io.quarkus:quarkus-rest-client-jackson")
 }
 
 kotlin {
