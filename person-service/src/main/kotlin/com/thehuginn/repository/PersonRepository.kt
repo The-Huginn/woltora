@@ -2,6 +2,7 @@ package com.thehuginn.repository
 
 import com.thehuginn.domain.Person
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheRepositoryBase
+import io.quarkus.panache.common.Parameters
 import jakarta.enterprise.context.ApplicationScoped
 import java.util.UUID
 
@@ -16,19 +17,18 @@ class PersonRepository : PanacheRepositoryBase<Person, UUID> {
         }
 
         val queryString = StringBuilder("1=1")
-        val params = mutableListOf<Any>()
+        val parameters = Parameters()
 
-        if (firstName != null) {
-            queryString.append(" and firstName = ?1")
-            params.add(firstName)
+        firstName?.let {
+            queryString.append(" and firstName = :firstName")
+            parameters.and("firstName", it)
+        }
+        lastName?.let {
+            queryString.append(" and lastName = :lastName")
+            parameters.and("lastName", it)
         }
 
-        if (lastName != null) {
-            queryString.append(" and lastName = ?2")
-            params.add(lastName)
-        }
-
-        return find(queryString.toString(), *params.toTypedArray()).list()
+        return find(queryString.toString(), parameters).list()
     }
 
 }
