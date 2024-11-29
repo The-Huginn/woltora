@@ -58,7 +58,7 @@ class QuarkusTestSqlCallback : QuarkusTestBeforeEachCallback, QuarkusTestAfterEa
     private fun executeWithDataSource(sqlStatement: String) {
         val dataSource = Arc.container().instance(DataSource::class.java).get()
         dataSource.connection.use { connection ->
-            connection.createStatement().executeQuery(sqlStatement)
+            connection.createStatement().execute(sqlStatement)
         }
     }
 }
