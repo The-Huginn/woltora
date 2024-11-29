@@ -5,6 +5,7 @@ import java.util.UUID
 
 data class OrderCommand(
     val userId: UUID,
+    val addressId: UUID,
     val status: OrderStatus,
     val restaurantId: UUID,
     val items: List<UUID>

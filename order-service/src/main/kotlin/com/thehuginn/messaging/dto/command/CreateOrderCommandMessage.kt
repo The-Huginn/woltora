@@ -4,6 +4,7 @@ import java.util.UUID
 
 data class CreateOrderCommandMessage(
     val userId: UUID,
+    val addressId: UUID,
     val restaurantId: UUID,
     val items: List<UUID>
 )

@@ -8,6 +8,7 @@ data class OrderResponse(
     val id: UUID,
     val status: OrderStatus,
     val userId: UUID,
+    val addressId: UUID,
     val restaurantId: UUID,
     val items: List<UUID>,
     val creationTimestamp: Instant

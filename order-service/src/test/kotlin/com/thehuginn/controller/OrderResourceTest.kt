@@ -32,6 +32,7 @@ class OrderResourceTest {
         assertThat(response.id).isEqualTo(orderId)
         assertThat(response.items).containsExactlyInAnyOrder(UUID.fromString("f1e98890-74d1-4800-8347-7f2e68fc9bfc"))
         assertThat(response.userId).isEqualTo(UUID.fromString("5ff13a5c-ef93-4096-8507-21ab93d1f894"))
+        assertThat(response.addressId).isEqualTo(UUID.fromString("10a3edc2-0c83-45f3-9345-f27f828ed23c"))
         assertThat(response.restaurantId).isEqualTo(UUID.fromString("10a3edc2-0c83-45f3-9345-f27f828ed01a"))
         assertThat(response.status).isEqualTo(CREATED)
     }

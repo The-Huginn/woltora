@@ -49,6 +49,7 @@ class CreateOrderCommandMessageTest {
             CreateOrderCommandMessage(
                 items = listOf(UUID.fromString("63e01f7a-aded-4353-acce-095cd8ed8f18")),
                 userId = UUID.fromString("0111b250-1c15-44ae-8149-6eef0867ed84"),
+                addressId = UUID.fromString("10a3edc2-0c83-45f3-9345-f27f828ed23c"),
                 restaurantId = UUID.fromString("10a3edc2-0c83-45f3-9345-f27f828ed01a")
             )
         )
@@ -68,6 +69,7 @@ class CreateOrderCommandMessageTest {
                             assertThat(item).isEqualTo(UUID.fromString("63e01f7a-aded-4353-acce-095cd8ed8f18"))
                         })
                         assertThat(it.userId).isEqualTo(UUID.fromString("0111b250-1c15-44ae-8149-6eef0867ed84"))
+                        assertThat(it.addressId).isEqualTo(UUID.fromString("10a3edc2-0c83-45f3-9345-f27f828ed23c"))
                         assertThat(it.restaurant).satisfies({ restaurant ->
                             assertThat(restaurant.id).isEqualTo(UUID.fromString("10a3edc2-0c83-45f3-9345-f27f828ed01a"))
                             assertThat(restaurant.name).isEqualTo("Woltora's Franchise")

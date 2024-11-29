@@ -8,6 +8,7 @@ data class OrderResult(
     val id: UUID,
     val status: OrderStatus,
     val userId: UUID,
+    val addressId: UUID,
     val restaurant: RestaurantResult,
     val items: List<UUID>,
     val creationTimestamp: Instant

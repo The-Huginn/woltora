@@ -33,6 +33,7 @@ class DefaultOrderService(
                 Order(
                     status = CREATED,
                     userId = command.userId,
+                    addressId = command.addressId,
                     restaurant = it
                 )
             }

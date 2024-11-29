@@ -9,6 +9,8 @@ quarkus:
   mongodb:
     database: food
     uuid-representation: standard
+#    devservices:
+#      image-name: mongo:4.4.29
 
   http:
     root-path: /api

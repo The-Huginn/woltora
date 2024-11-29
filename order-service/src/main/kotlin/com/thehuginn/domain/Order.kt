@@ -36,6 +36,8 @@ data class Order(
 
     val userId: UUID,
 
+    val addressId: UUID,
+
     @OnDelete(action = CASCADE)
     @ManyToOne
     var restaurant: Restaurant
@@ -60,6 +62,7 @@ data class Order(
     constructor() : this(
         status = CREATED,
         userId = DEFAULT_UUID,
+        addressId = DEFAULT_UUID,
         restaurant = Restaurant()
     )
 
