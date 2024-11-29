@@ -12,6 +12,8 @@ interface OrderService {
 
     fun getOrder(id: UUID): Uni<OrderResult>
 
+    fun getAll(): Uni<List<OrderResult>>
+
     fun getOrdersByUserId(userId: UUID): Uni<List<OrderResult>>
 
     fun assignOrder(command: AssignDeliveryCommand): Uni<Void>
