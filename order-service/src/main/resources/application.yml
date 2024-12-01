@@ -40,3 +40,4 @@ quarkus:
   quarkus:
     hibernate-orm:
       sql-load-script: no-file
+
