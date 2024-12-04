@@ -19,7 +19,7 @@ class UpdateLocationMockJob(
 ) {
 
     private val logger = getLogger(UpdateLocationMockJob::class.java)
-    private val userId = UUID.fromString("0111b250-1c15-44ae-8149-6eef0867ed84")
+    private val userId = UUID.fromString("812ffa1a-54d2-47be-b471-e2dcbb355f77")
     
     @Scheduled(every = "10s")
     fun updateOrdersLocation() {

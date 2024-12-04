@@ -7,4 +7,5 @@ fi
 
 USER_ID="$1"
 
-curl -s localhost:8084/api/address?userId=$USER_ID | jq '.[] | {id}'
+curl -s "localhost:8084/api/address?userId=$USER_ID" | jq -r '.[].id'
+
